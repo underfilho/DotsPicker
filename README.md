@@ -14,6 +14,6 @@ Crie uma lista de Dots, insira ao DotsPicker e pronto!
       Dot('Option 3', Colors.green)
     ],
     onSelected: (index) {},
-    exposureTime: 1 // Tempo de exposição do PopUp em segundos.
+    exposureTime: 1000 // Tempo de exposição do PopUp em milissegundos.
   )
 ```
