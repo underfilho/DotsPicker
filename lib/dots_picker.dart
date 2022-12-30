@@ -17,7 +17,7 @@ class DotsPicker extends StatefulWidget {
     required this.dots,
     this.onSelected,
     this.selected = 0,
-    this.exposureTime = 1,
+    this.exposureTime = 1000,
     this.showPopupOnInit = false,
     Key? key,
   }) : super(key: key);
@@ -44,7 +44,7 @@ class _DotsPickerState extends State<DotsPicker>
     _curve = CurvedAnimation(parent: _animController, curve: Curves.easeInOut);
     _animController.addStatusListener((status) {
       if (status == AnimationStatus.completed)
-        _timerReverse = Timer(Duration(seconds: widget.exposureTime),
+        _timerReverse = Timer(Duration(milliseconds: widget.exposureTime),
             () => _animController.reverse().then((value) => closePopUp()));
     });
 
