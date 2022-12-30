@@ -11,12 +11,14 @@ class DotsPicker extends StatefulWidget {
   final Function(int)? onSelected;
   final int selected;
   final int exposureTime;
+  final bool showPopupOnInit;
 
   const DotsPicker({
     required this.dots,
     this.onSelected,
     this.selected = 0,
     this.exposureTime = 1,
+    this.showPopupOnInit = false,
     Key? key,
   }) : super(key: key);
 
@@ -43,11 +45,15 @@ class _DotsPickerState extends State<DotsPicker>
     _animController.addStatusListener((status) {
       if (status == AnimationStatus.completed)
         _timerReverse = Timer(Duration(seconds: widget.exposureTime),
-            () => _animController.reverse());
+            () => _animController.reverse().then((value) => closePopUp()));
     });
 
     _keys =
         widget.dots.mapIndexed((i, e) => LabeledGlobalKey('dot$i')).toList();
+
+    if (widget.showPopupOnInit)
+      WidgetsBinding.instance.addPostFrameCallback(
+          (_) => Future.delayed(const Duration(milliseconds: 100), showPopUp));
   }
 
   @override
@@ -115,21 +121,20 @@ class _DotsPickerState extends State<DotsPicker>
     if (isPopupOpen) _overlayEntry?.remove();
   }
 
-  bool get isPopupOpen {
-    if (_overlayEntry == null) return false;
-    return _overlayEntry!.mounted;
-  }
+  bool get isPopupOpen => _overlayEntry?.mounted ?? false;
 
   OverlayEntry _overlayEntryBuilder() {
-    RenderBox renderBox =
-        _keys[selected].currentContext!.findRenderObject() as RenderBox;
-    Size size = renderBox.size;
-    Offset position = renderBox.localToGlobal(Offset.zero);
     double width = 150;
     double xcoord = 0.5;
 
     return OverlayEntry(builder: (context) {
-      var screenWidth = MediaQuery.of(context).size.width;
+      RenderBox renderBox =
+          _keys[selected].currentContext!.findRenderObject() as RenderBox;
+      Size size = renderBox.size;
+      Offset position = renderBox.localToGlobal(Offset.zero);
+
+      final screenWidth = MediaQuery.of(context).size.width;
+
       if (position.dx < 100) xcoord = 0.3;
       if (position.dx + size.width > screenWidth - 100) xcoord = 0.7;
 
