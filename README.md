@@ -14,6 +14,8 @@ Crie uma lista de Dots, insira ao DotsPicker e pronto!
       Dot('Option 3', Colors.green)
     ],
     onSelected: (index) {},
+    selected: 0 // Index inicial a ser selecionado
+    showPopupOnInit: true // Ao iniciar o Widget mostrar o Popup
     exposureTime: 1000 // Tempo de exposição do PopUp em milissegundos.
   )
 ```
